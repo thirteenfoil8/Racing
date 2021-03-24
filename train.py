@@ -130,7 +130,7 @@ class Net(nn.Module):
 
     @staticmethod
     def _weights_init(m):
-        if isinstance(m,s_ nn.Conv2d):
+        if isinstance(m, nn.Conv2d):
             nn.init.xavier_uniform_(m.weight, gain=nn.init.calculate_gain('relu'))
             nn.init.constant_(m.bias, 0.1)
 
