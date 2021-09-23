@@ -6,8 +6,8 @@ import torch
 from utils import DrawLine
 from agent import Agent,Env
 from network import Net
-vis = True
-render=False
+vis = False
+render=True
 
 if __name__ == "__main__":
     agent = Agent()
