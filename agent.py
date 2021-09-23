@@ -175,8 +175,9 @@ class Agent_test():
         action = action.squeeze().cpu().numpy()
         return action
 
-    def load_param(self):
-        self.net.load_state_dict(torch.load('param/ppo_net_params.pkl'))
+    def load_param(self,path= 'param/ppo_net_params.pkl'):
+        print(path)
+        self.net.load_state_dict(torch.load(path))
 
 class Agent_DQN(object):
     def __init__(self, gamma, epsilon, epsilonDecay, epsilonMin, alpha, maxMemSize, actionSpace, targetReplaceCount, episodeEnd):
