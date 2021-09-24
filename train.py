@@ -7,7 +7,7 @@ from utils import DrawLine
 from agent import Agent,Env
 from network import Net
 vis = False
-render=True
+render=False
 
 if __name__ == "__main__":
     agent = Agent()

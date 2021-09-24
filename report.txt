@@ -1,0 +1,24 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 1 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: agent.py
+--------------------------------------------------------------------------------
+agent.py:130:8: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'agent.py'
+ outputting to 'agentv2.py'
+--------------------------------------------------------------------------------
+
+130:8: WARNING: *.save requires manual check. (This warning is only applicable if the code saves a tf.Keras model) Keras model.save now saves to the Tensorflow SavedModel format by default, instead of HDF5. To continue saving to HDF5, add the argument save_format='h5' to the save() function.
+381:27: INFO: Added keywords to args of function 'tf.argmax'
+384:19: INFO: Added keywords to args of function 'tf.reduce_max'
+417:18: INFO: Added keywords to args of function 'tf.transpose'
+--------------------------------------------------------------------------------
+

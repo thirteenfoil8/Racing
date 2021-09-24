@@ -19,7 +19,7 @@ render=True
 if __name__ == "__main__":
     agent = Agent_test()
     agent.load_param('param/ppo_net_params.pkl')
-    env = Track(levelSeed=2) #change the value to change the track (0 = trained track)
+    env = Track(levelSeed=0) #change the value to change the track (0 = trained track)
     vid =VideoRecorder(env.track,path='recording/vid.mp4',metadata=None,enabled=True, base_path=None)
 
     training_records = []
@@ -43,4 +43,4 @@ if __name__ == "__main__":
         print('Ep {}\tScore: {:.2f}\t'.format(i_ep, score))
         env.track.close()
         vid.close()
-    os.system('cmd /c "ffmpeg -i ./recording/vid.mp4 -vf  "setpts=10*PTS" ./recording/vid2.mp4"')
+    os.system('cmd /c "ffmpeg -y -i ./recording/vid.mp4 -vf  "setpts=10*PTS" ./recording/vid2.mp4"')

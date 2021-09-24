@@ -15,7 +15,7 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.cnn_base = nn.Sequential(  # input shape (4, 96, 96)
-            nn.Conv2d(4, 8, kernel_size=4, stride=2),
+            nn.Conv2d(4, 8, kernel_size=2, stride=2),
             nn.ReLU(),  # activation
             nn.Conv2d(8, 16, kernel_size=3, stride=2),  # (8, 47, 47)
             nn.ReLU(),  # activation
@@ -50,54 +50,31 @@ class Net(nn.Module):
 
         return (alpha, beta), v
 
-class Qnetwork(nn.Module):
-    def __init__(self, actionSpaceSize , alpha):
-        super(Qnetwork, self).__init__()
-        self.alpha = alpha
-        self.conv1 = nn.Conv2d(1, 16, 8, stride=4, padding=1)
-        self.conv2 = nn.Conv2d(16, 32,4, stride=2)
-        # TODO flattening hier ? 
-        self.fc1 = nn.Linear(32*10*10, 256)
-        self.fc2 = nn.Linear(256, actionSpaceSize)
-
-        self.optimizer = optimizer.RMSprop(self.parameters(), lr=self.alpha)
-        self.loss = nn.MSELoss()
-        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-        self.to(self.device)
-
-    def forward(self, input):
-        # showImage(input)
-        self.printSize(input[:], "before list")
-        input = list(input) # convert to list to accomidate pyTorch's format
-        self.printSize(input[:], "after list")
-        # print(input[:])
-        prop = torch.Tensor(input).to(self.device)
-        self.printSize(prop, "prop")
-        # saveTensor(prop)
-
-        prop = prop.view(-1, 1, 96, 96)
-        print(len(prop[0][0]))
-
-        # CONVOLUTION LAYERS
-
-        prop = F.relu(self.conv1(prop))
-        print(len(prop[0][0]))
-
-        prop = F.relu(self.conv2(prop))
-        print(len(prop[0][0]))
-
-        print("output length of conv2: \n" + str(len(prop[0])) + "x" + str(len(prop[0][0])) + "x" + str(len(prop[0][0][0])) )
-
-        # FLATTENING
-        flat = prop.view(-1, 32 * 10 * 10)
-
-        # FULLY CONNECTED
-        prop = F.relu(self.fc1(flat))
-        out = self.fc2(prop)
-        # print(out)
-
-        return out
-
-
-    def printSize(self, observation, message = "<message>"):
-        print(message + " - input size of is: " + str(len(observation)) + " x " + str(len(observation[0])))
+class DQN_net(nn.Module): 
+    def __init__(self, outputs):
+        super(DQN, self).__init__()
+        self.conv1 = nn.Conv2d(1, 8, kernel_size = 7, stride = 3)
+        self.bn1 = nn.BatchNorm2d(8)
+        self.conv2 = nn.Conv2d(8, 32, kernel_size = 3)
+        self.bn2 = nn.BatchNorm2d(32)
+        self.fc1 = nn.Linear(32 * 3 * 3, 256)
+        self.fc2 = nn.Linear(256, outputs)
+    
+    def forward(self, x):
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = F.max_pool2d(x)
+        x = F.relu(self.bn2(self.conv2(x)))
+        x = F.max_pool2d(x)
+        # Flatten the input
+        x = x.view(-1, self.num_flat_features(x))
+        x = F.relu(self.fc1(x))
+        # Softmax activation for the last layer         
+        x = F.softmax(self.fc2(x))
+        
+        return x
+    def num_flat_features(self, x):
+        size = x.size()[1:]   # all dimensions except the batch dimension
+        num_features = 1
+        for s in size:
+            num_features *= s
+        return num_features

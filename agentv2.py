@@ -203,8 +203,6 @@ from skimage import color, transform
 import tf_slim as slim
 import tensorflow as tf
 import itertools as it
-tf.compat.v1.disable_eager_execution()
-
 class ExperienceHistory:
     """
     This saves the agent's experience in windowed cache.
@@ -366,11 +364,11 @@ class DQN:
         input_dim_with_batch = (self.batchsize, self.num_frame_stack) + self.pic_size
         input_dim_general = (None, self.num_frame_stack) + self.pic_size
 
-        self.input_prev_state = tf.compat.v1.placeholder(tf.float32, input_dim_general, "prev_state")
-        self.input_next_state = tf.compat.v1.placeholder(tf.float32, input_dim_with_batch, "next_state")
-        self.input_reward = tf.compat.v1.placeholder(tf.float32, self.batchsize, "reward")
-        self.input_actions = tf.compat.v1.placeholder(tf.int32, self.batchsize, "actions")
-        self.input_done_mask = tf.compat.v1.placeholder(tf.int32, self.batchsize, "done_mask")
+        self.input_prev_state = tf.squeeze(tf.keras.Input(dtype=tf.float32, shape=input_dim_general, name="prev_state"))
+        self.input_next_state = tf.squeeze(tf.keras.Input(dtype=tf.float32, shape=input_dim_with_batch, name="next_state"))
+        self.input_reward = tf.keras.Input(dtype=tf.float32, shape=self.batchsize, name="reward")
+        self.input_actions = tf.keras.Input(dtype=tf.int32, shape=self.batchsize, name="actions")
+        self.input_done_mask = tf.keras.Input(dtype=tf.int32, shape=self.batchsize, name="done_mask")
 
         # These are the state action values for all states
         # The target Q-values come from the fixed network
@@ -380,10 +378,10 @@ class DQN:
         with tf.compat.v1.variable_scope("train"):
             qsa_estimates = self.create_network(self.input_prev_state, trainable=True)
 
-        self.best_action = tf.argmax(qsa_estimates, axis=1)
+        self.best_action = tf.argmax(input=qsa_estimates, axis=1)
 
         not_done = tf.cast(tf.logical_not(tf.cast(self.input_done_mask, "bool")), "float32")
-        q_target = tf.reduce_max(qsa_targets, -1) * self.gamma * not_done + self.input_reward
+        q_target = tf.reduce_max(input_tensor=qsa_targets, axis=-1) * self.gamma * not_done + self.input_reward
         # select the chosen action from each row
         # in numpy this is qsa_estimates[range(batchsize), self.input_actions]
         action_slice = tf.stack([tf.range(0, self.batchsize), self.input_actions], axis=1)
@@ -391,7 +389,7 @@ class DQN:
 
         training_loss = tf.nn.l2_loss(q_target - q_estimates_for_input_action) / self.batchsize
 
-        optimizer = tf.compat.v1.train.AdamOptimizer(**(self.optimizer_params))
+        optimizer = tf.optimizers.Adam()
 
         reg_loss = tf.add_n(tf.compat.v1.losses.get_regularization_losses())
         self.train_op = optimizer.minimize(reg_loss + training_loss)
@@ -410,13 +408,13 @@ class DQN:
 
     def create_network(self, input, trainable):
         if trainable:
-            wr = slim.l2_regularizer(self.regularization)
+            wr = tf.keras.regularizers.l2(0.01)
         else:
             wr = None
 
         # the input is stack of black and white frames.
         # put the stack in the place of channel (last in tf)
-        input_t = tf.transpose(input, [0, 2, 3, 1])
+        input_t = tf.transpose(a=input, perm=[0, 2, 3, 1])
 
         net = slim.conv2d(input_t, 8, (7, 7), data_format="NHWC",
             activation_fn=tf.nn.relu, stride=3, weights_regularizer=wr, trainable=trainable)
