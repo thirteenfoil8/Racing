@@ -1,14 +1,17 @@
 import sys
 import torch
+import random
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import *
 import numpy as np
 from torch.distributions import Beta
+from collections import namedtuple, deque
 from gym import spaces
 import gym
-from network import Net
+from network import Net,DQN
+import math
 
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
@@ -111,18 +114,6 @@ class Agent():
 
         action = action.squeeze().cpu().numpy()
         a_logp = a_logp.item()
-        #action that prefer gas:
-        #action_space = spaces.Box(
-        #    np.array([-1, 0, 0]).astype(np.float32),
-        #    np.array([+1, +1, +1]).astype(np.float32),
-        #)
-        #all_actions = np.array(
-        #    [k for k in it.product([-1, 0, 1], [1, 0], [0.2, 0])]
-        #)
-        #gas_actions = np.array([a[1] == 1 and a[2] == 0 for a in all_actions])
-        #action_weights = 14.0 * gas_actions + 1.0
-        #action_weights /= np.sum(action_weights)
-        #action = np.random.choice(action_space.shape[0], p=action_weights)
         del state
         return action, a_logp
 
@@ -196,8 +187,98 @@ class Agent_test():
         print(path)
         self.net.load_state_dict(torch.load(path))
 
+###--------------------------------------------------DQN Section 1-----------------------------------------####
 
-###--------------------------------------------------DQN Section-----------------------------------------####
+BATCH_SIZE = 128
+GAMMA = 0.99
+TARGET_UPDATE = 10
+transition_dqn = np.dtype([('s', np.float64, (4, 96, 96)), ('a', np.float64, (3,)),
+                       ('r', np.float64), ('s_', np.float64, (4, 96, 96))])
+
+
+class Agent_DQN():
+    """
+    Agent for training
+    """
+    max_grad_norm = 0.5
+    clip_param = 0.1  # epsilon in clipped loss
+    ppo_epoch = 10
+    buffer_capacity, batch_size = 1200, 100
+    steps_done = 0
+    
+    
+
+    def __init__(self):
+        self.training_step = 0
+        self.net = DQN().double().to(device)
+        self.buffer = np.empty(self.buffer_capacity, dtype=transition_dqn)
+        self.counter = 0
+        self.eps=1
+
+
+        self.optimizer = optim.Adam(self.net.parameters(), lr=1e-3)
+
+    def select_action(self,state,t,n_actions):
+        if random.random() < self.eps:
+            action = np.random.randint(8)
+        else:
+            with torch.no_grad():
+                state = torch.from_numpy(state).double().to(device).unsqueeze(0)
+                action = self.net(state)
+                action = action.squeeze().cpu().numpy()
+                return action
+
+        if action == 1:
+            return [0, 0, 0.5] # brake
+        elif action == 2:
+            return [0, 1, 0] # accelerate
+        elif action == 3:
+            return [1, 0, 0] # steer right
+        elif action == 4:
+            return [-1, 0, 0] # steer left
+        elif action == 5:
+            return [1, 0.7, 0] # steer right while accelerating
+        elif action == 6:
+            return [-1, 0.7, 0] # steer left while accelerating
+        elif action == 7:
+            return [1, 0, 0.3] # steer right while braking
+        elif action == 0:
+            return [-1, 0, 0.3] # steer left while braking
+
+    def save_param(self):
+        torch.save(self.net.state_dict(), 'param/ppo_net_params_DQN.pkl')
+
+    def store(self, transition):
+        self.buffer[self.counter] = transition
+        self.counter += 1
+        if self.counter == self.buffer_capacity:
+            self.counter = 0
+            return True
+        else:
+            return False
+
+    def update(self):
+
+        s = torch.tensor(self.buffer['s'], dtype=torch.double).to(device)
+        a = torch.tensor(self.buffer['a'], dtype=torch.double).to(device)
+        r = torch.tensor(self.buffer['r'], dtype=torch.double).to(device).view(-1, 1)
+        s_ = torch.tensor(self.buffer['s_'], dtype=torch.double).to(device)
+        with torch.no_grad():
+            target_v = r + GAMMA * self.net(s_)[1]
+            adv = target_v - self.net(s)[1]
+        for _ in range(TARGET_UPDATE):
+            for index in BatchSampler(SubsetRandomSampler(range(self.buffer_capacity)), BATCH_SIZE, True):
+                value_loss = F.smooth_l1_loss(self.net(s[index]), target_v[index])
+                loss = value_loss
+                self.optimizer.zero_grad()
+                loss.backward()
+                # nn.utils.clip_grad_norm_(self.net.parameters(), self.max_grad_norm)
+                self.optimizer.step()
+        # Del from gpu to avoid overflow.
+        self.eps = max(0.99 * self.eps, 0.2)
+        del s, a, r, s_
+
+###--------------------------------------------------DQN Section 2-----------------------------------------####
 
 from skimage import color, transform
 import tf_slim as slim
@@ -283,7 +364,7 @@ class ExperienceHistory:
         # lazy to think how big is the smallest possible number. At least this is big enough
         self.max_frame_cache = self.capacity + 2 * self.num_frame_stack + 1
         self.frames = -np.ones((self.max_frame_cache,) + self.pic_size, dtype="float32")
-class DQN:
+class DQN_2:
     """
     General DQN agent.
     Can be applied to any standard environment
@@ -372,13 +453,10 @@ class DQN:
         self.input_actions = tf.compat.v1.placeholder(tf.int32, self.batchsize, "actions")
         self.input_done_mask = tf.compat.v1.placeholder(tf.int32, self.batchsize, "done_mask")
 
-        # These are the state action values for all states
-        # The target Q-values come from the fixed network
-        with tf.compat.v1.variable_scope("fixed"):
-            qsa_targets = self.create_network(self.input_next_state, trainable=False)
+        
+        qsa_targets = self.create_network(self.input_next_state, trainable=False)
 
-        with tf.compat.v1.variable_scope("train"):
-            qsa_estimates = self.create_network(self.input_prev_state, trainable=True)
+        qsa_estimates = self.create_network(self.input_prev_state, trainable=True)
 
         self.best_action = tf.argmax(qsa_estimates, axis=1)
 

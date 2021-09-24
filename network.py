@@ -50,31 +50,40 @@ class Net(nn.Module):
 
         return (alpha, beta), v
 
-class DQN_net(nn.Module): 
-    def __init__(self, outputs):
+
+
+
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda" if use_cuda else "cpu")
+class DQN(nn.Module):
+
+    def __init__(self):
         super(DQN, self).__init__()
-        self.conv1 = nn.Conv2d(1, 8, kernel_size = 7, stride = 3)
-        self.bn1 = nn.BatchNorm2d(8)
-        self.conv2 = nn.Conv2d(8, 32, kernel_size = 3)
-        self.bn2 = nn.BatchNorm2d(32)
-        self.fc1 = nn.Linear(32 * 3 * 3, 256)
-        self.fc2 = nn.Linear(256, outputs)
-    
+        self.cnn_base = nn.Sequential(  # input shape (4, 96, 96)
+            nn.Conv2d(4, 8, kernel_size=2, stride=2),
+            nn.ReLU(),  # activation
+            nn.Conv2d(8, 16, kernel_size=3, stride=2),  # (8, 47, 47)
+            nn.ReLU(),  # activation
+            nn.Conv2d(16, 32, kernel_size=3, stride=2),  # (16, 23, 23)
+            nn.ReLU(),  # activation
+            nn.Conv2d(32, 64, kernel_size=3, stride=2),  # (32, 11, 11)
+            nn.ReLU(),  # activation
+            nn.Conv2d(64, 128, kernel_size=3, stride=1),  # (64, 5, 5)
+            nn.ReLU(),  # activation
+            nn.Conv2d(128, 256, kernel_size=3, stride=1),  # (128, 3, 3)
+            nn.ReLU(),  # activation
+        )  # output shape (256, 1, 1)
+        self.v = nn.Sequential(nn.Linear(256, 100), nn.ReLU(), nn.Linear(100, 3))
+
+    # Called with either one element to determine next action, or a batch
+    # during optimization. Returns tensor([[left0exp,right0exp]...]).
+    @staticmethod
+    def _weights_init(m):
+        if isinstance(m, nn.Conv2d):
+            nn.init.xavier_uniform_(m.weight, gain=nn.init.calculate_gain('relu'))
+
     def forward(self, x):
-        x = F.relu(self.bn1(self.conv1(x)))
-        x = F.max_pool2d(x)
-        x = F.relu(self.bn2(self.conv2(x)))
-        x = F.max_pool2d(x)
-        # Flatten the input
-        x = x.view(-1, self.num_flat_features(x))
-        x = F.relu(self.fc1(x))
-        # Softmax activation for the last layer         
-        x = F.softmax(self.fc2(x))
-        
-        return x
-    def num_flat_features(self, x):
-        size = x.size()[1:]   # all dimensions except the batch dimension
-        num_features = 1
-        for s in size:
-            num_features *= s
-        return num_features
+        x = self.cnn_base(x)
+        x = x.view(-1, 256)
+        v = self.v(x)
+        return v
