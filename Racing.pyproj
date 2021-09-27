@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8fb2ab74-e7ca-4839-862f-f8c55e4f9754}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>train.py</StartupFile>
+    <StartupFile>test.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
