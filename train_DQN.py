@@ -8,7 +8,7 @@ from agent import Agent_DQN,Env
 from network import Net
 import itertools as it
 vis = False
-render=True
+render=False
 
 if __name__ == "__main__":
     agent = Agent_DQN()

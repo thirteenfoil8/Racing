@@ -46,7 +46,7 @@ class Env():
                 reward += 100
             # green penalty
             if np.mean(img_rgb[:, :, 1]) > 185.0:
-                reward -= 0.5
+                reward -= 0.05
             total_reward += reward
             # if no reward recently, end the episode
             done = True if self.av_r(reward) <= -0.1 else False
@@ -211,7 +211,7 @@ class Agent_DQN():
         self.buffer = np.empty(self.buffer_capacity, dtype=transition_dqn)
         self.counter = 0
         self.eps=1
-        self.all_actions = np.array([[-1, 0, 0],  [0, 0.3, 0], [0, 0, 0.5], [0, 0, 0],[1, 0, 0]])
+        self.all_actions = np.array([[-1, 0, 0],  [0, 0.8, 0], [0, 0, 0.5], [0, 0, 0],[1, 0, 0]])
         self.gas_actions = np.array([a[1] == 1 and a[2] == 0 for a in self.all_actions])
         self.break_actions = np.array([a[2] > 0 for a in self.all_actions])
         self.n_gas_actions = self.gas_actions.sum()
@@ -253,7 +253,7 @@ class Agent_DQN():
         s_ = torch.tensor(self.buffer['s_'], dtype=torch.double).to(device)
         criterion = nn.SmoothL1Loss()
         with torch.no_grad():
-            target_v = r + GAMMA * self.net(s_)
+            target_v = r + GAMMA *torch.argmax(self.net(s_),dim =1 ).reshape(-1,1)
         for _ in range(TARGET_UPDATE):
             for index in BatchSampler(SubsetRandomSampler(range(self.buffer_capacity)), BATCH_SIZE, True):
                 loss = criterion(self.net(s[index]), target_v[index])
