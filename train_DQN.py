@@ -13,9 +13,7 @@ render=True
 if __name__ == "__main__":
     agent = Agent_DQN()
     env = Env()
-    all_actions = np.array(
-            [k for k in it.product([-1, 0, 1], [1, 0], [0.2, 0])]
-        )
+    all_actions = np.array([[-1, 0, 0],  [0,1, 0], [0, 0, 0.5], [0, 0, 0],[1, 0, 0]])
     n_actions = len(all_actions)
     if vis:
         draw_reward = DrawLine(env="car", title="PPO", xlabel="Episode", ylabel="Moving averaged episode reward")
@@ -24,12 +22,12 @@ if __name__ == "__main__":
     running_score = 0
     moving_average = np.array
     state = env.reset()
-    for i_ep in range(100000):
+    for i_ep in range(300000):
         score = 0
         state = env.reset()
         for t in range(1000):
             action = agent.select_action(state,t,n_actions)
-            state_, reward, done, die = env.step(action * np.array([2., 1., 1.]) + np.array([-1., 0., 0.]))
+            state_, reward, done, die = env.step(action)
             if render:
                 env.render()
             if agent.store((state, action, reward, state_)):
@@ -40,7 +38,7 @@ if __name__ == "__main__":
             if done or die:
                 break
         running_score = running_score * 0.99 + score * 0.01
-        print('Score: {:.2f}, Action taken: {}'.format(score, t+1))
+        print('Score: {:.2f}, Action taken: {}, epsilon: {:.2f}'.format(score, t+1,agent.eps))
 
         if i_ep % 10 == 0:
             if vis:

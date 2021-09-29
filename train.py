@@ -19,7 +19,7 @@ if __name__ == "__main__":
     running_score = 0
     moving_average = np.array
     state = env.reset()
-    for i_ep in range(100000):
+    for i_ep in range(2000):
         score = 0
         state = env.reset()
 

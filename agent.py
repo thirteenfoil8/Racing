@@ -24,8 +24,7 @@ class Env():
     """
 
     def __init__(self):
-        self.env = gym.make('CarRacing-v0')
-        self.env.seed(0)
+        self.env = gym.make('CarRacing-v0',  verbose=False)
         self.reward_threshold = self.env.spec.reward_threshold
 
     def reset(self):
@@ -47,7 +46,7 @@ class Env():
                 reward += 100
             # green penalty
             if np.mean(img_rgb[:, :, 1]) > 185.0:
-                reward -= 0.05
+                reward -= 0.5
             total_reward += reward
             # if no reward recently, end the episode
             done = True if self.av_r(reward) <= -0.1 else False
@@ -92,7 +91,6 @@ class Agent():
     """
     max_grad_norm = 0.5
     clip_param = 0.1  # epsilon in clipped loss
-    ppo_epoch = 20
     buffer_capacity, batch_size = 1200, 100
 
     def __init__(self):
@@ -201,10 +199,9 @@ class Agent_DQN():
     Agent for training
     """
     max_grad_norm = 0.5
-    clip_param = 0.1  # epsilon in clipped loss
-    ppo_epoch = 10
-    buffer_capacity, batch_size = 500, 100
+    buffer_capacity, batch_size = 1200, 100
     steps_done = 0
+    
     
     
 
@@ -214,26 +211,27 @@ class Agent_DQN():
         self.buffer = np.empty(self.buffer_capacity, dtype=transition_dqn)
         self.counter = 0
         self.eps=1
+        self.all_actions = np.array([[-1, 0, 0],  [0, 0.3, 0], [0, 0, 0.5], [0, 0, 0],[1, 0, 0]])
+        self.gas_actions = np.array([a[1] == 1 and a[2] == 0 for a in self.all_actions])
+        self.break_actions = np.array([a[2] > 0 for a in self.all_actions])
+        self.n_gas_actions = self.gas_actions.sum()
 
 
         self.optimizer = optim.Adam(self.net.parameters(), lr=1e-3)
 
     def select_action(self,state,t,n_actions):
+        action_weights = 14.0 * self.gas_actions + 1.0
+        action_weights /= np.sum(action_weights)
         if random.random() < self.eps:
-            action = np.random.randint(12)
+            action_index = np.random.choice(self.all_actions.shape[0], p=action_weights)
+            return self.all_actions[action_index]
+
         else:
             with torch.no_grad():
                 state = torch.from_numpy(state).double().to(device).unsqueeze(0)
-                action = self.net(state)
-                action = action.squeeze().cpu().numpy()
-                return action
-
-        action_space    = [
-            [-1, 1, 0.2], [0, 1, 0.2], [1, 1, 0.2], #           Action Space Structure
-            [-1, 1,   0], [0, 1,   0], [1, 1,   0], #        (Steering Wheel, Gas, Break)
-            [-1, 0, 0.2], [0, 0, 0.2], [1, 0, 0.2], # Range        -1~1       0~1   0~1
-            [-1, 0,   0], [0, 0,   0], [1, 0,   0]]
-        return action_space[action]
+                action_index = torch.argmax(self.net(state))
+                action_index = action_index.squeeze().cpu().numpy()
+                return self.all_actions[action_index]
 
     def save_param(self):
         torch.save(self.net.state_dict(), 'param/ppo_net_params_DQN.pkl')
@@ -253,13 +251,19 @@ class Agent_DQN():
         a = torch.tensor(self.buffer['a'], dtype=torch.double).to(device)
         r = torch.tensor(self.buffer['r'], dtype=torch.double).to(device).view(-1, 1)
         s_ = torch.tensor(self.buffer['s_'], dtype=torch.double).to(device)
+        criterion = nn.SmoothL1Loss()
         with torch.no_grad():
-            target_v = r + GAMMA * self.net(s_)[1]
+            target_v = r + GAMMA * self.net(s_)
         for _ in range(TARGET_UPDATE):
             for index in BatchSampler(SubsetRandomSampler(range(self.buffer_capacity)), BATCH_SIZE, True):
-                loss = F.smooth_l1_loss(self.net(s[index]), target_v[index])
-                self.net.zero_grad()
+                loss = criterion(self.net(s[index]), target_v[index])
+                self.optimizer.zero_grad()
                 loss.backward()
+                #for param in self.net.parameters():
+                #    param.grad.data.clamp_(-1, 1)
                 self.optimizer.step()
         self.eps = max(0.99 * self.eps, 0.2)
         del s, a, r, s_
+    def load_param(self,path= 'param/ppo_net_params_DQN.pkl'):
+        print(path)
+        self.net.load_state_dict(torch.load(path))

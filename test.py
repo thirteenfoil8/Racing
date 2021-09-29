@@ -4,7 +4,7 @@ import gym
 import torch
 import torch.nn as nn
 from network import Net
-from agent import Agent_test, Env
+from agent import Agent_DQN, Env
 from track import Track
 from gym.wrappers.monitoring.video_recorder import VideoRecorder
 
@@ -17,10 +17,10 @@ if use_cuda:
 
 render=True
 if __name__ == "__main__":
-    agent = Agent_test()
-    agent.load_param('param/ppo_net_params.pkl')
-    env = Track(levelSeed=0) #change the value to change the track (0 = trained track)
-    vid =VideoRecorder(env.track,path='recording/vid.mp4',metadata=None,enabled=True, base_path=None)
+    agent = Agent_DQN()
+    agent.load_param('param/ppo_net_params_DQN.pkl')
+    env = Env() #change the value to change the track (0 = trained track)
+    vid =VideoRecorder(env.env,path='recording/vid.mp4',metadata=None,enabled=True, base_path=None)
 
     training_records = []
     running_score = 0
@@ -30,10 +30,10 @@ if __name__ == "__main__":
         state = env.reset()
 
         for t in range(1000):
-            action = agent.select_action(state)
-            state_, reward, done, die = env.step(action * np.array([2., 1., 1.]) + np.array([-1., 0., 0.]))
+            action = agent.select_action(state,t,5)
+            state_, reward, done, die = env.step(action)
             if render:
-                env.render()
+                env.render() 
             vid.capture_frame()
             score += reward
             state = state_
@@ -41,6 +41,6 @@ if __name__ == "__main__":
                 break
 
         print('Ep {}\tScore: {:.2f}\t'.format(i_ep, score))
-        env.track.close()
+        env.env.close()
         vid.close()
     os.system('cmd /c "ffmpeg -y -i ./recording/vid.mp4 -vf  "setpts=10*PTS" ./recording/vid2.mp4"')
