@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{f84c27f3-eb22-4dbd-ac39-a2565592da15}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>DQN\main.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>CondaEnv|CondaEnv|logitech</InterpreterId>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DQN\car_dqn.py" />
+    <Compile Include="DQN\dqn.py" />
+    <Compile Include="DQN\exp_replay.py" />
+    <Compile Include="DQN\main.py" />
+    <Compile Include="DQN\processimage.py" />
+    <Compile Include="PPO\agent.py" />
+    <Compile Include="PPO\network.py" />
+    <Compile Include="PPO\test.py" />
+    <Compile Include="PPO\train.py" />
+    <Compile Include="PPO\utils.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DQN\data\checkpoints\train.txt" />
+    <Content Include="DQN\Train_Test_Data\gpu_trn_19.png" />
+    <Content Include="PPO\recording\ezgif-7-6723a315ce17.gif" />
+    <Content Include="PPO\recording\video.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DQN" />
+    <Folder Include="DQN\data\" />
+    <Folder Include="DQN\data\checkpoints" />
+    <Folder Include="DQN\Train_Test_Data" />
+    <Folder Include="PPO" />
+    <Folder Include="PPO\recording" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="CondaEnv|CondaEnv|logitech" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
