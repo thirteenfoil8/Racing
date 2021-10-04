@@ -52,7 +52,7 @@ dqn_agent.session = sess
 saver = tf.compat.v1.train.Saver(max_to_keep=1000) #max number of checkpoints = 500
 #Choice to load checkpoints
 if load_checkpoint:
-    train_episodes = 150
+    train_episodes = 3000
     save_freq_episodes = 0
     print("loading the latest checkpoint from %s" % checkpoint_path)
     ckpt = tf.compat.v1.train.get_checkpoint_state(checkpoint_path)
@@ -60,7 +60,7 @@ if load_checkpoint:
     global_counter = int(re.findall("-(\d+)$", ckpt.model_checkpoint_path)[0])
     saver.restore(sess, ckpt.model_checkpoint_path)
     dqn_agent.global_counter = global_counter
-    render = False
+    render = True
 else:
     if checkpoint_path is not None:
         assert not os.path.exists(checkpoint_path), \
@@ -130,7 +130,7 @@ def main_loop(eps_history,dqn_scores,avg_score_all,render,load_checkpoint):
             break
         if dqn_agent.do_training and dqn_agent.episode_counter >= train_episodes:
 
-            break
+            break 
         eps_history,dqn_scores,avg_score_all = one_episode(eps_history,dqn_scores,avg_score_all,render,load_checkpoint)
 
     print("done")

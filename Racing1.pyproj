@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{f84c27f3-eb22-4dbd-ac39-a2565592da15}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>DQN\main.py</StartupFile>
+    <StartupFile>Manually\main.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -13,6 +13,7 @@
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId>CondaEnv|CondaEnv|logitech</InterpreterId>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
+    <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -25,6 +26,9 @@
     <Compile Include="DQN\exp_replay.py" />
     <Compile Include="DQN\main.py" />
     <Compile Include="DQN\processimage.py" />
+    <Compile Include="Manually\main.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PPO\agent.py" />
     <Compile Include="PPO\network.py" />
     <Compile Include="PPO\test.py" />
@@ -42,6 +46,8 @@
     <Folder Include="DQN\data\" />
     <Folder Include="DQN\data\checkpoints" />
     <Folder Include="DQN\Train_Test_Data" />
+    <Folder Include="Manually\" />
+    <Folder Include="PID\" />
     <Folder Include="PPO" />
     <Folder Include="PPO\recording" />
   </ItemGroup>

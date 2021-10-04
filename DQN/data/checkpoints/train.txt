@@ -1,74 +1,8 @@
-#> episode: 1 | score: 77.65 | total steps: 35615 | epsilon: 0.66215 | average 100 score: 77.65 => New HighScore! <= 
-#> episode: 2 | score: 101.36 | total steps: 35665 | epsilon: 0.66166 | average 100 score: 89.51 => New HighScore! <= 
-#> episode: 3 | score: 22.77 | total steps: 35709 | epsilon: 0.66118 | average 100 score: 67.26
-#> episode: 4 | score: 54.27 | total steps: 35779 | epsilon: 0.66076 | average 100 score: 64.01
-#> episode: 5 | score: 358.64 | total steps: 35940 | epsilon: 0.66010 | average 100 score: 122.94 => New HighScore! <= 
-#> episode: 6 | score: 678.25 | total steps: 36225 | epsilon: 0.65857 | average 100 score: 215.49 => New HighScore! <= 
-#> episode: 7 | score: 157.84 | total steps: 36298 | epsilon: 0.65586 | average 100 score: 207.25
-#> episode: 8 | score: 872.75 | total steps: 36539 | epsilon: 0.65517 | average 100 score: 290.44 => New HighScore! <= 
-#> episode: 9 | score: 245.88 | total steps: 36667 | epsilon: 0.65288 | average 100 score: 285.49
-#> episode: 10 | score: 316.97 | total steps: 36794 | epsilon: 0.65166 | average 100 score: 288.64
-#> episode: 11 | score: 153.67 | total steps: 36860 | epsilon: 0.65046 | average 100 score: 276.37
-#> episode: 12 | score: 330.00 | total steps: 36960 | epsilon: 0.64983 | average 100 score: 280.84
-#> episode: 13 | score: 291.64 | total steps: 37078 | epsilon: 0.64888 | average 100 score: 281.67
-#> episode: 14 | score: 456.52 | total steps: 37205 | epsilon: 0.64776 | average 100 score: 294.16 => New HighScore! <= 
-#> episode: 15 | score: 314.71 | total steps: 37305 | epsilon: 0.64655 | average 100 score: 295.53 => New HighScore! <= 
-#> episode: 16 | score: 125.02 | total steps: 37361 | epsilon: 0.64560 | average 100 score: 284.87
-#> episode: 17 | score: 297.78 | total steps: 37472 | epsilon: 0.64507 | average 100 score: 285.63
-#> episode: 18 | score: 265.78 | total steps: 37592 | epsilon: 0.64402 | average 100 score: 284.53
-#> episode: 19 | score: 679.36 | total steps: 37804 | epsilon: 0.64288 | average 100 score: 305.31 => New HighScore! <= 
-#> episode: 20 | score: 145.67 | total steps: 37874 | epsilon: 0.64086 | average 100 score: 297.33
-#> episode: 21 | score: 340.34 | total steps: 37994 | epsilon: 0.64020 | average 100 score: 299.38
-#> episode: 22 | score: 895.02 | total steps: 38260 | epsilon: 0.63906 | average 100 score: 326.45 => New HighScore! <= 
-#> episode: 23 | score: 100.72 | total steps: 38328 | epsilon: 0.63653 | average 100 score: 316.64
-#> episode: 24 | score: 318.42 | total steps: 38440 | epsilon: 0.63588 | average 100 score: 316.71
-#> episode: 25 | score: 298.66 | total steps: 38537 | epsilon: 0.63482 | average 100 score: 315.99
-#> episode: 26 | score: 894.00 | total steps: 38770 | epsilon: 0.63390 | average 100 score: 338.22 => New HighScore! <= 
-#> episode: 27 | score: 428.33 | total steps: 38901 | epsilon: 0.63169 | average 100 score: 341.56 => New HighScore! <= 
-#> episode: 28 | score: 618.44 | total steps: 39054 | epsilon: 0.63044 | average 100 score: 351.45 => New HighScore! <= 
-#> episode: 29 | score: 352.77 | total steps: 39161 | epsilon: 0.62899 | average 100 score: 351.49 => New HighScore! <= 
-#> episode: 30 | score: 363.10 | total steps: 39261 | epsilon: 0.62797 | average 100 score: 351.88 => New HighScore! <= 
-#> episode: 31 | score: 874.20 | total steps: 39472 | epsilon: 0.62702 | average 100 score: 368.73 => New HighScore! <= 
-#> episode: 32 | score: 25.04 | total steps: 39508 | epsilon: 0.62502 | average 100 score: 357.99
-#> episode: 33 | score: 493.58 | total steps: 39671 | epsilon: 0.62467 | average 100 score: 362.10
-#> episode: 34 | score: 594.35 | total steps: 39826 | epsilon: 0.62313 | average 100 score: 368.93 => New HighScore! <= 
-#> episode: 35 | score: 907.04 | total steps: 40054 | epsilon: 0.62165 | average 100 score: 384.30 => New HighScore! <= 
-#> episode: 36 | score: 130.29 | total steps: 40114 | epsilon: 0.61949 | average 100 score: 377.25
-#> episode: 37 | score: 891.07 | total steps: 40316 | epsilon: 0.61892 | average 100 score: 391.13 => New HighScore! <= 
-#> episode: 38 | score: 244.55 | total steps: 40409 | epsilon: 0.61700 | average 100 score: 387.28
-#> episode: 39 | score: 434.47 | total steps: 40524 | epsilon: 0.61611 | average 100 score: 388.49
-#> episode: 40 | score: 300.39 | total steps: 40626 | epsilon: 0.61502 | average 100 score: 386.28
-#> episode: 41 | score: 359.02 | total steps: 40740 | epsilon: 0.61405 | average 100 score: 385.62
-#> episode: 42 | score: 330.52 | total steps: 40841 | epsilon: 0.61297 | average 100 score: 384.31
-#> episode: 43 | score: 565.22 | total steps: 41032 | epsilon: 0.61201 | average 100 score: 388.51
-#> episode: 44 | score: 393.75 | total steps: 41143 | epsilon: 0.61020 | average 100 score: 388.63
-#> episode: 45 | score: 315.75 | total steps: 41251 | epsilon: 0.60914 | average 100 score: 387.01
-#> episode: 46 | score: 98.74 | total steps: 41298 | epsilon: 0.60812 | average 100 score: 380.75
-#> episode: 47 | score: 439.74 | total steps: 41435 | epsilon: 0.60767 | average 100 score: 382.00
-#> episode: 48 | score: 875.00 | total steps: 41651 | epsilon: 0.60637 | average 100 score: 392.27 => New HighScore! <= 
-#> episode: 49 | score: 26.34 | total steps: 41691 | epsilon: 0.60432 | average 100 score: 384.80
-#> episode: 50 | score: 354.60 | total steps: 41800 | epsilon: 0.60394 | average 100 score: 384.20
-#> episode: 51 | score: 883.36 | total steps: 42001 | epsilon: 0.60290 | average 100 score: 393.99 => New HighScore! <= 
-#> episode: 52 | score: 421.43 | total steps: 42124 | epsilon: 0.60099 | average 100 score: 394.51 => New HighScore! <= 
-#> episode: 53 | score: 351.80 | total steps: 42247 | epsilon: 0.59982 | average 100 score: 393.71
-#> episode: 54 | score: 284.93 | total steps: 42343 | epsilon: 0.59865 | average 100 score: 391.69
-#> episode: 55 | score: 452.14 | total steps: 42472 | epsilon: 0.59774 | average 100 score: 392.79
-#> episode: 56 | score: 287.21 | total steps: 42565 | epsilon: 0.59652 | average 100 score: 390.91
-#> episode: 57 | score: 414.95 | total steps: 42697 | epsilon: 0.59563 | average 100 score: 391.33
-#> episode: 58 | score: 382.08 | total steps: 42822 | epsilon: 0.59438 | average 100 score: 391.17
-#> episode: 59 | score: 229.06 | total steps: 42919 | epsilon: 0.59319 | average 100 score: 388.42
-#> episode: 60 | score: 653.15 | total steps: 43074 | epsilon: 0.59227 | average 100 score: 392.83
-#> episode: 61 | score: 277.12 | total steps: 43170 | epsilon: 0.59080 | average 100 score: 390.94
-#> episode: 62 | score: 399.03 | total steps: 43346 | epsilon: 0.58988 | average 100 score: 391.07
-#> episode: 63 | score: 227.54 | total steps: 43433 | epsilon: 0.58821 | average 100 score: 388.47
-#> episode: 64 | score: 453.00 | total steps: 43572 | epsilon: 0.58739 | average 100 score: 389.48
-#> episode: 65 | score: 370.74 | total steps: 43689 | epsilon: 0.58607 | average 100 score: 389.19
-#> episode: 66 | score: 343.91 | total steps: 43780 | epsilon: 0.58495 | average 100 score: 388.51
-#> episode: 67 | score: 260.99 | total steps: 43871 | epsilon: 0.58409 | average 100 score: 386.60
-#> episode: 68 | score: 155.66 | total steps: 43939 | epsilon: 0.58323 | average 100 score: 383.21
-#> episode: 69 | score: 606.75 | total steps: 44100 | epsilon: 0.58258 | average 100 score: 386.45
-#> episode: 70 | score: 717.32 | total steps: 44272 | epsilon: 0.58105 | average 100 score: 391.17
-#> episode: 71 | score: 894.82 | total steps: 44475 | epsilon: 0.57942 | average 100 score: 398.27 => New HighScore! <= 
-#> episode: 72 | score: 877.58 | total steps: 44687 | epsilon: 0.57749 | average 100 score: 404.92 => New HighScore! <= 
-#> episode: 73 | score: 301.07 | total steps: 44791 | epsilon: 0.57547 | average 100 score: 403.50
-#> episode: 74 | score: 482.35 | total steps: 44934 | epsilon: 0.57449 | average 100 score: 404.57
+#> episode: 1 | score: 152.65 | total steps: 35623 | epsilon: 0.66215 | average 100 score: 152.65 => New HighScore! <= 
+#> episode: 2 | score: 67.99 | total steps: 35675 | epsilon: 0.66158 | average 100 score: 110.32
+#> episode: 3 | score: 46.72 | total steps: 35738 | epsilon: 0.66109 | average 100 score: 89.12
+#> episode: 4 | score: 24.86 | total steps: 35795 | epsilon: 0.66049 | average 100 score: 73.06
+#> episode: 5 | score: 129.85 | total steps: 35852 | epsilon: 0.65995 | average 100 score: 84.42
+#> episode: 6 | score: 118.99 | total steps: 35911 | epsilon: 0.65941 | average 100 score: 90.18
+#> episode: 7 | score: 94.19 | total steps: 35970 | epsilon: 0.65885 | average 100 score: 90.75
+#> episode: 8 | score: 336.55 | total steps: 36118 | epsilon: 0.65829 | average 100 score: 121.48
