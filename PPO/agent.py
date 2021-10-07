@@ -21,6 +21,7 @@ transition = np.dtype([('s', np.float64, (4, 96, 96)), ('a', np.float64, (3,)), 
 class Env():
     """
     Environment wrapper for CarRacing
+
     """
 
     def __init__(self):

@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{f84c27f3-eb22-4dbd-ac39-a2565592da15}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>Manually\main.py</StartupFile>
+    <StartupFile>PPO\train.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>

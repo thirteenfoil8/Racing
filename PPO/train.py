@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
         for t in range(1000):
             action, a_logp = agent.select_action(state)
-            state_, reward, done, die = env.step(action * np.array([2., 2., 1.]) + np.array([-1., 0., 0.]))
+            state_ , reward, done, die = env.step(action * np.array([2., 2., 1.]) + np.array([-1., 0., 0.]))
             if render:
                 env.render()
             if agent.store((state, action, a_logp, reward, state_)):
